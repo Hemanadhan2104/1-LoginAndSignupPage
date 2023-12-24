@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login and Signup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    form {
+      max-width: 300px;
+      margin: 20px auto;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .error-message {
+      color: red;
+    }
+
+    .login-link {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .login-link a {
+      color: #4285f4;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="signupForm">
+    <h2>Signup</h2>
+    <label for="signupUsername">Username:</label>
+    <input type="text" id="signupUsername" required>
+
+    <label for="signupPassword">Password:</label>
+    <input type="password" id="signupPassword" required>
+
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" required>
+
+    <div id="errorMessage" class="error-message"></div>
+
+    <button type="button" onclick="signup()">Signup</button>
+
+    <div class="login-link">
+      Already Signed Up? <a onclick="showLoginForm()">Login</a>
+    </div>
+  </form>
+
+  <form id="loginForm" style="display:none;">
+    <h2>Login</h2>
+    <label for="loginUsername">Username:</label>
+    <input type="text" id="loginUsername" required>
+
+    <label for="loginPassword">Password:</label>
+    <input type="password" id="loginPassword" required>
+
+    <div id="loginErrorMessage" class="error-message"></div>
+
+    <button type="button" onclick="login()">Login</button>
+
+    <div class="signup-link">
+      Don't have an account? <a onclick="showSignupForm()">Signup</a>
+    </div>
+  </form>
+
+  <script>
+    function isPasswordValid(password) {
+      // Password must be between 8 and 12 characters and include uppercase, lowercase, number, and symbol
+      var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/;
+      return passwordRegex.test(password);
+    }
+
+    function signup() {
+      var signupUsername = document.getElementById("signupUsername").value;
+      var signupPassword = document.getElementById("signupPassword").value;
+      var confirmPassword = document.getElementById("confirmPassword").value;
+      var errorMessage = document.getElementById("errorMessage");
+
+      if (signupPassword !== confirmPassword) {
+        errorMessage.innerHTML = "Password and Confirm Password do not match!";
+      } else if (!isPasswordValid(signupPassword)) {
+        errorMessage.innerHTML = "Password must be 8-12 characters and include uppercase, lowercase, number, and symbol.";
+      } else {
+        errorMessage.innerHTML = "";
+        // Store user data in local storage
+        localStorage.setItem('username', signupUsername);
+        localStorage.setItem('password', signupPassword);
+
+        // Perform signup logic (you can send data to the server if needed)
+        alert("Signup successful!");
+
+        // Hide signup form and display login form
+        document.getElementById("signupForm").style.display = "none";
+        document.getElementById("loginForm").style.display = "block";
+      }
+    }
+
+    function login() {
+      var loginUsername = document.getElementById("loginUsername").value;
+      var loginPassword = document.getElementById("loginPassword").value;
+
+      // Retrieve user data from local storage
+      var storedUsername = localStorage.getItem('username');
+      var storedPassword = localStorage.getItem('password');
+
+      // Perform login logic
+      if (loginUsername === storedUsername && loginPassword === storedPassword) {
+        alert("Login successful!");
+      } else {
+        document.getElementById("loginErrorMessage").innerHTML = "Invalid login credentials!";
+      }
+    }
+
+    function showLoginForm() {
+      document.getElementById("signupForm").style.display = "none";
+      document.getElementById("loginForm").style.display = "block";
+    }
+
+    function showSignupForm() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("signupForm").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
